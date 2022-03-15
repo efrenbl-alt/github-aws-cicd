@@ -95,7 +95,7 @@ Resources:
   CodeBuildProjectDeployDev:
     Type: 'AWS::CodeBuild::Project'
     Properties:
-      Name: !Ref '${AWS::StackName}-deploy-dev'
+      Name: !Sub '${AWS::StackName}-deploy-dev'
       ServiceRole: !GetAtt 
         - CodeBuildServiceRole
         - Arn
@@ -115,7 +115,7 @@ Resources:
   CodeBuildProjectDeployQa:
     Type: 'AWS::CodeBuild::Project'
     Properties:
-      Name: !Ref '${AWS::StackName}-deploy-qa'
+      Name: !Sub '${AWS::StackName}-deploy-qa'
       ServiceRole: !GetAtt 
         - CodeBuildServiceRole
         - Arn
@@ -135,7 +135,7 @@ Resources:
   CodeBuildProjectDeployProd:
     Type: 'AWS::CodeBuild::Project'
     Properties:
-      Name: !Ref '${AWS::StackName}-deploy-prod'
+      Name: !Sub '${AWS::StackName}-deploy-prod'
       ServiceRole: !GetAtt 
         - CodeBuildServiceRole
         - Arn

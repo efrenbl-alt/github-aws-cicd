@@ -39,12 +39,14 @@ Resources:
                   - 's3:GetBucketAcl'
                   - 's3:GetBucketLocation'
                 Resource: '*'
+  
   CodeBuildSourceCredential:
     Type: 'AWS::CodeBuild::SourceCredential'
     Properties:
       AuthType: PERSONAL_ACCESS_TOKEN
       ServerType: GITHUB
-      Token: '{{resolve.secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}'
+      Token: '{{resolve:secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}'
+  
   CodeBuildProject:
     Type: 'AWS::CodeBuild::Project'
     Properties:
@@ -62,10 +64,10 @@ Resources:
       Triggers:
         Webhook: true
         FilterGroups:
-          - Type: EVENT
-            Pattern: 'PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED'
-          - Type: BASE_REF
-            Pattern: !Sub ^refs/heads/main$
+          - - Type: EVENT
+              Pattern: 'PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED'
+            - Type: BASE_REF
+              Pattern: !Sub ^refs/heads/main$
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL

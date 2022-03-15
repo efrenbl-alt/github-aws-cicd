@@ -1,4 +1,22 @@
 AWSTemplateFormatVersion: 2010-09-09
+Description: CI/CD pipeline for github projects
+
+Parameters:
+  GithubOwner:
+    Type: String
+    AllowedPattern: "[A-Za-z0-9-]+"
+    Default: efrenbl-alt
+
+  GithubRepository:
+    Type: String
+    AllowedPattern: "[A-Za-z0-9-]+"
+  
+  GithubBranch:
+    Type: String
+    AllowedPattern: "[A-Za-z0-9-]+"
+    Default: main
+
+
 Resources:
   CodeBuildServiceRole:
     Type: 'AWS::IAM::Role'
@@ -54,7 +72,7 @@ Resources:
       ServiceRole: !GetAtt CodeBuildServiceRole.Arn
       Source:
         Type: GITHUB
-        Location: 'https://github.com/efrenbl-alt/github-aws-cicd.git'
+        Location: !Sub 'https://github.com/${GithubOwner}/${GithubRepository}.git'
         BuildSpec: buildspec.yaml
         Auth:
           Type: OAUTH
@@ -65,9 +83,9 @@ Resources:
         Webhook: true
         FilterGroups:
           - - Type: EVENT
-              Pattern: 'PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED'
+              Pattern: 'PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED, PULL_REQUEST_REOPENED'
             - Type: BASE_REF
-              Pattern: !Sub ^refs/heads/main$
+              Pattern: !Sub ^refs/heads/${GithubBranch}$
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
